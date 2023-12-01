@@ -1,3 +1,3 @@
-# Graph Minor using Sparse Matrix Multiplication
+# Parallel-Distributed-Systems-2023
 
-This project implements a graph minor algorithm using sparse matrix multiplication with Pthreads
+This project was completed for the class Parallel and Distributed Systems. It implements a graph minor algorithm using sparse matrix multiplication with Pthreads
