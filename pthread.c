@@ -103,7 +103,6 @@ double getElement(const SparseMatrix* mat, int row, int col) {
     return 0.0; // Return 0.0 if the element is not found
 }
 
-
 SparseMatrix extractRows(const SparseMatrix* inputMatrix, int startRow, int endRow) {
     SparseMatrix outputMatrix;
     outputMatrix.rows = endRow - startRow + 1;
@@ -277,63 +276,6 @@ SparseMatrix multiplySparseMatrices(const SparseMatrix* mat1, const SparseMatrix
 
     // Destroy mutex
     pthread_mutex_destroy(&mutex);
-
-    return result;
-}
-
-// Function to multiply two sparse matrices in COO form
-SparseMatrix multiplySparseMatricesSeq(const SparseMatrix *mat1, const SparseMatrix *mat2) {
-
-    // Initialize result matrix
-    SparseMatrix result;
-    result.rows = mat1->rows;
-    result.cols = mat2->cols;
-    result.num_elements = 0;
-    result.elements = NULL;
-
-    // Check if matrices can be multiplied
-    if (mat1->cols != mat2->rows) {
-        printf("Error: Incompatible matrix dimensions for multiplication\n");
-        return result;
-    }
-
-    // Allocate memory for the result matrix
-    result.elements = (Triplet *)malloc(mat1->num_elements * mat2->num_elements * sizeof(Triplet));
-    if (result.elements == NULL) {
-        printf("Error: Memory allocation failed: No elements in mat1 && mat2\n");
-        return result;
-    }
-
-    // Perform algorithm for sparse matrix multiplication
-    for (int i = 0; i < mat1->num_elements; i++) {
-        for (int j = 0; j < mat2->num_elements; j++) {
-            if (mat1->elements[i].col == mat2->elements[j].row) {
-                // Multiply corresponding elements and add to result
-                int row = mat1->elements[i].row;
-                int col = mat2->elements[j].col;
-                int value = mat1->elements[i].value * mat2->elements[j].value; //(MulTIPLICATION)
-
-                // Search for existing element with the same row and col indices in the result matrix
-                int k;
-                for (k = 0; k < result.num_elements; k++) {
-                    if (result.elements[k].row == row && result.elements[k].col == col) {
-                        result.elements[k].value += value;  // Accumulate values (ADDITION)
-                        break;
-                    }
-                }
-
-                // If no existing element is found, add a new element to the result matrix
-                if (k == result.num_elements) {
-                    result.elements[result.num_elements].row = row;
-                    result.elements[result.num_elements].col = col;
-                    result.elements[result.num_elements].value = value;
-                    result.num_elements++;
-
-                    printf("element added: %d,  %d           %lg\n", row, col, result);
-                }
-            }
-        }
-    }
 
     return result;
 }
